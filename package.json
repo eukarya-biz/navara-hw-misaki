@@ -6,19 +6,21 @@
   "scripts": {
     "dev": "vite --port 8080",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "vite build && gh-pages -d dist"
   },
   "dependencies": {
     "@navara/three": "file:./externals/navara-three-0.0.0.tgz",
-    "@navara/three_default_plugin": "file:./externals/navara-three_default_plugin-0.0.0.tgz",
     "@navara/three_default_descs": "file:./externals/navara-three_default_descs-0.0.0.tgz",
+    "@navara/three_default_plugin": "file:./externals/navara-three_default_plugin-0.0.0.tgz",
     "@navara/three_plugins": "file:./externals/navara-three_plugins-0.0.0.tgz",
+    "postprocessing": "6.38.3",
     "three": "0.184.0",
-    "three-stdlib": "2.36.1",
-    "postprocessing": "6.38.3"
+    "three-stdlib": "2.36.1"
   },
   "devDependencies": {
     "@types/three": "0.184.0",
+    "gh-pages": "^6.3.0",
     "typescript": "5.9.3",
     "vite": "8.0.8"
   },
