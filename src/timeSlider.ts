@@ -3,9 +3,11 @@ import { createControlRow } from "./ui/panel";
 // Time-nudge slider row. Offsets the clock by up to a few hours from
 // whatever reference instant is currently in effect (e.g. the auto-computed
 // sunset time for the current location), rather than picking an absolute
-// time — that's what the date picker is for. The label shows the resulting
-// clock time, not the raw offset, since "+30min" means less at a glance
-// than "17:45".
+// time — that's what the date picker is for. How the offset is labeled is
+// left entirely to the caller via `formatValue`: main.ts currently shows it
+// relative to sunset (e.g. "+30m") rather than as an absolute clock time,
+// since the sunset moment itself is only an astronomical estimate, not a
+// real-world time reading.
 
 export interface TimeSliderHandle {
   // Recenters the slider to 0 — call whenever the reference instant it

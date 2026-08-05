@@ -71,7 +71,7 @@ export function ensurePanelStyles(): void {
       font-size: 12px;
       font-variant-numeric: tabular-nums;
       color: ${ACCENT};
-      min-width: 3.6em;
+      min-width: 4.4em;
       text-align: right;
       flex-shrink: 0;
     }

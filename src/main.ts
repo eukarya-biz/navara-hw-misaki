@@ -72,12 +72,21 @@ function zonedDateAt(offsetHours: number, day: Date, hour: number, minute: numbe
   return new Date(utcMillis - offsetHours * 3_600_000);
 }
 
-// Formats a Date as "HH:MM" wall-clock time at a given UTC offset — for
-// display only (unlike `zonedDateAt`, not meant to round-trip).
-function formatTimeOfDay(date: Date, offsetHours: number): string {
-  const shifted = new Date(date.getTime() + offsetHours * 3_600_000);
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${pad(shifted.getUTCHours())}:${pad(shifted.getUTCMinutes())}`;
+// Formats the time slider's offset relative to sunset ("Sunset", "-45m",
+// "+1h30m") rather than as an absolute clock time. `utcOffsetHoursForLng`
+// is only a longitude-based approximation of local solar time — it ignores
+// real timezone boundaries and DST entirely — so a label like "18:30"
+// implied a precision (an actual local wall-clock reading) the app can't
+// back up. The offset from the astronomically-computed sunset moment,
+// though, is always correct regardless of what any clock nearby reads.
+function formatOffsetFromSunset(offsetMinutes: number): string {
+  if (offsetMinutes === 0) return "Sunset";
+  const sign = offsetMinutes < 0 ? "-" : "+";
+  const abs = Math.abs(offsetMinutes);
+  if (abs < 60) return `${sign}${abs}m`;
+  const hours = Math.floor(abs / 60);
+  const minutes = abs % 60;
+  return minutes === 0 ? `${sign}${hours}h` : `${sign}${hours}h${minutes}m`;
 }
 
 // Sun elevation + azimuth (degrees) at an arbitrary date/lat/lng, via a
@@ -513,11 +522,7 @@ const timeSlider = createTimeSlider({
   panel: controlPanel,
   minMinutes: -120,
   maxMinutes: 120,
-  formatValue: (offsetMinutes) =>
-    formatTimeOfDay(
-      new Date(baseSunsetDate.getTime() + offsetMinutes * 60_000),
-      utcOffsetHoursForLng(cameraTarget.lng),
-    ),
+  formatValue: formatOffsetFromSunset,
   onChange: (offsetMinutes) => {
     view.atmosphere.date = new Date(baseSunsetDate.getTime() + offsetMinutes * 60_000);
   },
